@@ -8,3 +8,6 @@ install:
 
 serve:
 	foreman start -p 5000
+
+deploy:
+	git push heroku master
