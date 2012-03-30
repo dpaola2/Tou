@@ -1,19 +1,16 @@
-<!doctype html>
+3<!doctype html>
 <head>
-  {% block title %}
-  <title></title>
-  {% endblock %}
+  <title>{% block title %}{% endblock %}</title>
   <style type="text/css">
     
 .editor textarea {
-  width: 500px;
-  height: 500px;
+  height: 100%;
   float: left;
 }
 
 .preview {
   width: 500px;
-  height: 500px;
+  height: 100%;
   float: right;
   border: 1px solid gray;
 }
@@ -24,8 +21,5 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script type="text/javascript" src="/static/js/markdown.js"></script>
   <script type="text/javascript" src="/static/js/application.js"></script>
-  {% for message in get_flashed_messages() %}
-    <div class=flash>{{ message }}</div>
-  {% endfor %}
   {% block body %}{% endblock %}
 </div>
