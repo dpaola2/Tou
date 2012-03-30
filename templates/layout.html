@@ -1,0 +1,13 @@
+<!doctype html>
+<head>
+  {% block title %}
+  <title></title>
+  {% endblock %}
+</head>
+<body>
+  <script type="text/javascript" src="/static/js/markdown.js"></script>
+  {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+  {% endfor %}
+  {% block body %}{% endblock %}
+</div>
