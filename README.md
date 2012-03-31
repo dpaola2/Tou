@@ -1,10 +1,10 @@
 # Tou
 
-![Tou Logo](http://tou.herokuapp.com/static/images/TouLogo.png)
+![Tou Logo](http://tou.herokuapp.com/static/images/TouLogo160x160.png)
 
 ## Overview
 
-**Tou**, an open-source markdown editor for the web.
+**Tou** is an open-source markdown editor for the web.
 
 Heavily inspired by the excellent [Mou editor for OS X](http://www.mouapp.com).
 
@@ -146,64 +146,3 @@ First Header | Second Header | Third Header
 :----------- | :-----------: | -----------:
 Left         | Center        | Right
 Left         | Center        | Right
-
-
-### Shortcuts
-
-#### View
-
-* Toggle live preview: Shift + Cmd + I
-* Left/Right = 1/1: Cmd + 0
-* Left/Right = 3/1: Cmd + +
-* Left/Right = 1/3: Cmd + -
-* Toggle Writing orientation: Cmd + L
-* Toggle fullscreen: Control + Cmd + F
-
-#### Actions
-
-* Copy HTML: Option + Cmd + C
-* Strong: Select text, Cmd + B
-* Emphasize: Select text, Cmd + I
-* Inline Code: Select text, Cmd + K
-* Strikethrough: Select text, Cmd + U
-* List: Select lines, Control + L
-* Link: Select text, Control + Shift + L
-* Image: Select text, Control + Shift + I
-* Uppercase: Select text, Control + U
-* Lowercase: Select text, Control + Shift + U
-* Titlecase: Select text, Control + Option + U
-* Spaces to Tabs: Control + [
-* Tabs to Spaces: Control + ]
-* Select Word: Control + Option + W
-* Select Line: Shift + Cmd + L
-* Select All: Cmd + A
-* Deselect All: Cmd + D
-* Insert entity <: Control + Shift + ,
-* Insert entity >: Control + Shift + .
-* Insert entity &: Control + Shift + 7
-* Insert entity Space: Control + Shift + Space
-* Shift Line Left: Select lines, Cmd + [
-* Shift Line Right: Select lines, Cmd + ]
-* New Line: Cmd + Return
-* Comment: Cmd + /
-* Hard Linebreak: Control + Return
-
-#### Edit
-
-* Auto complete current word: Esc
-* Find: Cmd + F
-* Close find bar: Esc
-
-#### Export
-
-* Export HTML: Option + Cmd + E
-* Export PDF:  Option + Cmd + P
-
-
-### And more?
-
-Don't forget to check Preferences, lots of useful options are there. You can Disable/enable **Show Live Preview** in new documents, Disable/enable **Auto pair**, **Make links clickable in Editor view**, change **Base Font**, choose another **Theme** or create your own!
-
-Follow [@chenluois](http://twitter.com/chenluois) on Twitter for the latest news.
-
-For feedback, use the menu `Help` - `Send Feedback`
