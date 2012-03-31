@@ -25,10 +25,18 @@ var load_file = function(url) {
     });
 }
 
+var load_readme = function() {
+    $.ajax({
+        url: "/readme",
+        success: function(data, textStatus, jqxhr) { load_content(data); },
+        error: function(jqxhr, textStatus, errorThrown) { load_content(textStatus); }
+    });
+}
+
 var setup = function() {
     focus_editor();
     start_converting();
-    load_file("http://raw.github.com/dpaola2/Tou/master/README.md")
+    load_readme();
 }
 
 $(setup)
