@@ -28,7 +28,7 @@ var load_file = function(url) {
 var setup = function() {
     focus_editor();
     start_converting();
-    load_file("http://tou.herokuapp.com/readme")
+    load_file("http://raw.github.com/dpaola2/Tou/master/README.md")
 }
 
 $(setup)
