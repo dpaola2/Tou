@@ -18,7 +18,8 @@ var load_content = function(content) {
 
 var load_file = function(url) {
     $.ajax({
-        url: url, 
+        url: "/load_file",
+        data: {url: url},
         success: function(data, textStatus, jqxhr) { load_content(data); }, 
         error: function(jqxhr, textStatus, errorThrown) { load_content(textStatus); }
     });
@@ -27,6 +28,7 @@ var load_file = function(url) {
 var setup = function() {
     focus_editor();
     start_converting();
+    load_file("http://tou.herokuapp.com/readme")
 }
 
 $(setup)
