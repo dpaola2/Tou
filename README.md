@@ -1,10 +1,6 @@
-# Tou
-
 ![Tou Logo](http://tou.herokuapp.com/static/images/TouLogo160x160.png)
 
-## Overview
-
-**Tou** is an open-source markdown editor for the web.
+### Tou is an open-source markdown editor for the web.
 
 Heavily inspired by the excellent [Mou editor for OS X](http://www.mouapp.com).
 
