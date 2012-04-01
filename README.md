@@ -6,7 +6,17 @@ Heavily inspired by the excellent [Mou editor for OS X](http://www.mouapp.com).
 
 Get the [source code](https://github.com/dpaola2/Tou).
 
-### Syntax
+### Hacking
+
+	$ git clone <your fork>
+	$ make # build virtualenv and install dependencies
+	$ make serve # runs the local server
+	$ heroku create --stack cedar
+	$ make deploy
+	
+Don't forget to source bin/activate if you need to do anything else :-)
+
+### Markdown Syntax
 
 #### Strong and Emphasize 
 
