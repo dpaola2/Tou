@@ -3,7 +3,8 @@ var focus_editor = function() {
 }
 
 var convert = function() {
-    content = markdown.toHTML($('.editor textarea').val());
+    raw_input = $('.editor textarea').val();
+    content = markdown.toHTML(raw_input);
     $('.preview').html(content);
 }
 
