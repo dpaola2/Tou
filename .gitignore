@@ -4,3 +4,4 @@ bin
 include
 .Python
 build
+.DS_Store
