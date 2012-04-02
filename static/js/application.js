@@ -63,7 +63,7 @@
             _.each(entries, function(entry) {
                 var $dirEntry = $('<li class="entry" />')
                     .text(entry.name)
-                    .data('path', entry.fullPath)
+                    .data('path', entry.path)
                     .on('click', open_file);
                 $dir.append($dirEntry);
             });
@@ -299,7 +299,10 @@
             var results = [];
             self._readEntries(function appender(entries) {
                 _.each(entries, function(entry) {
-                    results.push(entry);
+                    results.push({
+                        name: entry.name,
+                        path: entry.fullPath
+                    });
                 });
                 if (entries.length) {
                     self._readEntries(appender);
