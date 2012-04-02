@@ -339,11 +339,14 @@
                 data: {
                     filepath: this.path
                 },
-                success: function(data, textStatus, jqxhr) { callback(data); }, 
+                success: function(data, textStatus, jqxhr) { callback(null, data); }, 
                 error: function(jqxhr, textStatus, errorThrown) { callback(textStatus); }
             });
         },
-        close: function(callback) {},
+        close: function(callback) {}, // TODO
+        open: function(callback) {}, // TODO
+        del: function(callback) {}, // TODO
+        write: function(callback) {}, //TODO
         ls: function(callback) {
             var results = [];
             $.ajax({
