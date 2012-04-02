@@ -123,10 +123,9 @@ def dropbox_callback():
     session[DROPBOX_ACCESS_KEY] = access_token
     return redirect('/')
 
-@app.route('/unlink_dropbox')
-def unlink_dropbox():
-    session.pop(DROPBOX_REQUEST_KEY)
-    session.pop(DROPBOX_ACCESS_KEY)
+@app.route('/logout')
+def logout():
+    session.clear()
     return redirect('/')
 
 @app.route('/debug_session')
