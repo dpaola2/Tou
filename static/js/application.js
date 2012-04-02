@@ -339,17 +339,24 @@
         }
     });
 
-    function DropboxDirectory() {}
+    function DropboxDirectory(path) {
+        this.path = path;
+    }
     _.extend(DropboxDirectory.prototype, {
         ls: function(callback) {
             var results = [];
             $.ajax({
                 url: '/dropbox_ls',
                 type: 'get',
-                data: { dir: '/' },
+                data: { dir: this.path || '/' },
                 dataType: 'json',
                 success: function(data, textStatus, jqxhr) {
-                    callback(data)
+                    _.each(data, function(entry) {
+                        entry.type = 'dir';
+                        entry.reader = DropboxDirectory
+                    });
+
+                    callback(data);
                 },
                 error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }                
             });
@@ -371,7 +378,7 @@
             if (LocalFile.supported()) {
                 services.push({ name: 'Local', path: '/local', type: 'dir', reader: LocalDirectory });
             }
-            /* services.push({ name: 'Dropbox', path: '/dropbox', type: 'dir', reader: DropboxDirectory }); */
+            services.push({ name: 'Dropbox', type: 'dir', reader: DropboxDirectory });
             callback(services);
         }
     });
