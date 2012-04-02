@@ -17,6 +17,8 @@ First install [Heroku's Toolbelt](https://toolbelt.herokuapp.com/)
 
 Don't forget to source bin/activate if you need to do anything else :-)
 
+NOTE: The icons came from [here](http://dryicons.com/free-icons/preview/stylistica-icons-set/).
+
 ### Markdown Syntax
 
 #### Strong and Emphasize 
