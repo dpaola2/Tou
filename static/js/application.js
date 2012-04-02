@@ -4,16 +4,6 @@
     var current_file;
     var current_dir;
 
-    var setup_controls = function () {
-        if (LocalFile.supported()) {
-            LocalFile.initialize(function(err) {
-                if (!err) {
-                    $('.controls .open').show();
-                }
-            });
-        }
-    }
-
     var stop_event = function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -186,7 +176,6 @@
     }
 
     var setup = function() {
-        setup_controls();
         hookup_controls();
         focus_editor();
         start_converting();
@@ -378,7 +367,18 @@
         close: function(callback) {}, // TODO
         open: function(callback) {}, // TODO
         del: function(callback) {}, // TODO
-        write: function(callback) {}, //TODO
+        write: function(contents, callback) {
+            $.ajax({
+                url: '/dropbox_save',
+                type: 'post',
+                data: {
+                    filepath: this.path,
+                    contents: contents
+                },
+                success: function(data, textStatus, jqxhr) { callback(null, data); }, 
+                error: function(jqxhr, textStatus, errorThrown) { callback(textStatus); }
+            });
+        }, //TODO
         ls: function(callback) {
             var results = [];
             $.ajax({
@@ -403,14 +403,6 @@
             });
         }
     });
-
-    // i'm not sure, but i'd be willing to bet this is also toxic to kittens:
-    window.show_dropbox = function() {
-        var dropbox = new DropboxDirectory();
-        dropbox.ls(function(entries) {
-            reset_editor(entries)
-        });
-    }
 
     function ServiceDirectory() {}
     _.extend(ServiceDirectory.prototype, {
