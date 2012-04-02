@@ -33,7 +33,6 @@
         }
     }
 
-<<<<<<< HEAD
     var open_dropbox_file = function(filename) {
         $.ajax({
             url: '/load_dropbox_file',
