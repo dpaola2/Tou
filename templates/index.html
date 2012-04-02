@@ -6,9 +6,15 @@
     <div class="edit">
       <div class="icon save" title="Save"></div>
       <div class="icon open" title="Open"></div>
+      {% if session['dropbox_access_token'] %}
+      <a href="/logout">
+        <div class="icon logout" title="Logout"></div>
+      </a>
+      {% else %}
       <a href="/link_dropbox">
         <div class="icon dropbox" title="Link to Dropbox"></div>
       </a>
+      {% endif %}
     </div>
     <div class="dir">
       <div class="icon mkdir" title="New Folder"></div>

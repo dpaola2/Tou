@@ -1,3 +1,4 @@
+
 (function($, _) {
     // This is an instance of File class that can be written
     var current_file;
@@ -35,17 +36,6 @@
         }
     }
 
-    var open_dropbox_file = function(filename) {
-        $.ajax({
-            url: '/load_dropbox_file',
-            type: 'get',
-            data: {
-                filepath: filename
-            },
-            success: function(data, textStatus, jqxhr) { reset_editor(data); }, 
-            error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }
-        });
-    }
 
     var open_file = function(file) {
         file.read(function(err, contents) {
@@ -370,6 +360,58 @@
         }
     });
 
+    function DropboxDirectory(path) {
+        this.path = path;
+    }
+    _.extend(DropboxDirectory.prototype, {
+        read: function(callback) {
+            $.ajax({
+                url: '/load_dropbox_file',
+                type: 'get',
+                data: {
+                    filepath: this.path
+                },
+                success: function(data, textStatus, jqxhr) { callback(null, data); }, 
+                error: function(jqxhr, textStatus, errorThrown) { callback(textStatus); }
+            });
+        },
+        close: function(callback) {}, // TODO
+        open: function(callback) {}, // TODO
+        del: function(callback) {}, // TODO
+        write: function(callback) {}, //TODO
+        ls: function(callback) {
+            var results = [];
+            $.ajax({
+                url: '/dropbox_ls',
+                type: 'get',
+                data: { dir: this.path || '/' },
+                dataType: 'json',
+                success: function(data, textStatus, jqxhr) {
+                    _.each(data, function(entry) {
+                        entry.reader = DropboxDirectory
+                        if (entry.isFile) {
+                            entry.type = 'file';
+                        }
+                        if (entry.isDirectory) {
+                            entry.type = 'dir';
+                        }
+                    });
+
+                    callback(data);
+                },
+                error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }                
+            });
+        }
+    });
+
+    // i'm not sure, but i'd be willing to bet this is also toxic to kittens:
+    window.show_dropbox = function() {
+        var dropbox = new DropboxDirectory();
+        dropbox.ls(function(entries) {
+            reset_editor(entries)
+        });
+    }
+
     function ServiceDirectory() {}
     _.extend(ServiceDirectory.prototype, {
         ls: function(callback) {
@@ -377,7 +419,7 @@
             if (LocalFile.supported()) {
                 services.push({ name: 'Local', type: 'dir', reader: LocalDirectory });
             }
-            /* services.push({ name: 'Dropbox', path: '/dropbox', type: 'dir', reader: DropboxDirectory }); */
+            services.push({ name: 'Dropbox', type: 'dir', reader: DropboxDirectory });
             callback(services);
         }
     });
