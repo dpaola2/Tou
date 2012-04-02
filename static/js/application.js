@@ -1,6 +1,7 @@
 (function($, _) {
     // This is an instance of File class that can be written
     var current_file;
+    var current_dir;
 
     var setup_controls = function () {
         if (LocalFile.supported()) {
@@ -20,7 +21,8 @@
     var hookup_controls = function () {
         $('.controls .open').on('click', open);
         $('.controls .save').on('click', save_file);
-        $('.controls .touch').on('click', new_file_prompt);
+        $('.controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
+        $('.controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
 
         // DnD support. jquery doesn't handle this well, so using
         // the old-school addEventListener.
@@ -77,6 +79,7 @@
         var entry = $.data(e.target, 'meta');
         if (entry.type === 'dir') {
             var dir = new entry.reader(entry.path);
+            current_dir = dir;
             return render_dir(dir);
         } else if (entry.type === 'file') {
             var file = new entry.reader(entry.path);
@@ -119,24 +122,30 @@
         }
     }
 
-    var new_file_prompt = function(e) {
+    var new_file_prompt = function(type, e) {
         $input = $('<input type="text" />')
             .on('keyup', function(e) {
                 if (e.which === 13) {
-                    create_file($input.val());
+                    create_file(type, $input.val());
                 }
             });
         $('.tree .dir').last().append($input);
         $input.focus();
     }
 
-    var create_file = function(path) {
-        var file = new LocalFile(path);
-        file.open(function(err) {
-            hide_dir_tree();
-            current_file = file;
-            reset_editor('');
-        });
+    var create_file = function(type, name) {
+        if (type == 'file') {
+            current_dir.touch(name, function(err, file) {
+                hide_dir_tree();
+                current_file = file;
+                reset_editor('');
+            });
+        } else if (type == 'dir') {
+            current_dir.mkdir(name, function(err) {
+                $('.tree .dir').last().remove();
+                render_dir(current_dir);
+            });
+        }
     }
 
     var show_drop_screen = function(e) {
@@ -217,7 +226,7 @@
                 exclusive: false // Don't throw error if the file exists
             }, function(fileEntry) {
                 self._fd = fileEntry;
-                callback();
+                callback(null, self);
             }, errorWrapper(callback));
         },
         read: function(callback) {
@@ -296,10 +305,18 @@
         }
     });
 
-    function LocalDirectory() {
-        this.reader = LocalFile._fs.root.createReader(); // TODO: figure out how this should actually work
+    function LocalDirectory(path) {
+        this.path = path;
     }
     _.extend(LocalDirectory.prototype, {
+        _ensureDir: function(callback) {
+            var self = this;
+            LocalFile._fs.root.getDirectory(this.path, {}, function(dir) {
+                self.dir = dir;
+                self.reader = self.dir.createReader();
+                callback();
+            });
+        },
         // Everything is terrible, so you have to call _readentries repeatedly
         // until it stops returning results.
         _readEntries: function(callback) {
@@ -309,32 +326,47 @@
         },
         ls: function(callback) {
             var self = this;
-            var results = [];
-            self._readEntries(function appender(entries) {
-                _.each(entries, function(entry) {
-                    var result = {
-                        name: entry.name,
-                        path: entry.fullPath,
-                    };
-                    if (entry.isFile) {
-                        _.extend(result, {
-                            reader: LocalFile,
-                            type: 'file'
-                        });
-                    } else if (entry.isDirectory) {
-                        _.extend(result, {
-                            reader: LocalDirectory,
-                            type: 'directory'
-                        });
+            self._ensureDir(function() {
+                var results = [];
+                self._readEntries(function appender(entries) {
+                    _.each(entries, function(entry) {
+                        var result = {
+                            name: entry.name,
+                            path: entry.fullPath,
+                        };
+                        if (entry.isFile) {
+                            _.extend(result, {
+                                reader: LocalFile,
+                                type: 'file'
+                            });
+                        } else if (entry.isDirectory) {
+                            _.extend(result, {
+                                reader: LocalDirectory,
+                                type: 'dir'
+                            });
+                        }
+                        results.push(result);
+                    });
+                    if (entries.length) {
+                        self._readEntries(appender);
+                    } else {
+                        callback(results);
                     }
-                    results.push(result);
                 });
-                if (entries.length) {
-                    self._readEntries(appender);
-                } else {
-                    callback(results);
-                }
             });
+        },
+        mkdir: function(name, callback) {
+            var self = this;
+            self._ensureDir(function() {
+                self.dir.getDirectory(name, { create: true }, function(dir) {
+                    callback(dir);
+                }, errorWrapper(callback));
+            });
+        },
+        touch: function(name, callback) {
+            var path = this.path + '/' + name;
+            var file = new LocalFile(path);
+            file.open(callback);
         }
     });
 
@@ -343,7 +375,7 @@
         ls: function(callback) {
             var services = [];
             if (LocalFile.supported()) {
-                services.push({ name: 'Local', path: '/local', type: 'dir', reader: LocalDirectory });
+                services.push({ name: 'Local', type: 'dir', reader: LocalDirectory });
             }
             /* services.push({ name: 'Dropbox', path: '/dropbox', type: 'dir', reader: DropboxDirectory }); */
             callback(services);
