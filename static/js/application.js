@@ -34,17 +34,6 @@
         }
     }
 
-    var open_dropbox_file = function(filename) {
-        $.ajax({
-            url: '/load_dropbox_file',
-            type: 'get',
-            data: {
-                filepath: filename
-            },
-            success: function(data, textStatus, jqxhr) { reset_editor(data); }, 
-            error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }
-        });
-    }
 
     var open_file = function(file) {
         file.read(function(err, contents) {
@@ -325,7 +314,7 @@
                     } else if (entry.isDirectory) {
                         _.extend(result, {
                             reader: LocalDirectory,
-                            type: 'directory'
+                            type: 'dir'
                         });
                     }
                     results.push(result);
@@ -343,6 +332,18 @@
         this.path = path;
     }
     _.extend(DropboxDirectory.prototype, {
+        read: function(callback) {
+            $.ajax({
+                url: '/load_dropbox_file',
+                type: 'get',
+                data: {
+                    filepath: this.path
+                },
+                success: function(data, textStatus, jqxhr) { callback(data); }, 
+                error: function(jqxhr, textStatus, errorThrown) { callback(textStatus); }
+            });
+        },
+        close: function(callback) {},
         ls: function(callback) {
             var results = [];
             $.ajax({
@@ -352,8 +353,13 @@
                 dataType: 'json',
                 success: function(data, textStatus, jqxhr) {
                     _.each(data, function(entry) {
-                        entry.type = 'dir';
                         entry.reader = DropboxDirectory
+                        if (entry.isFile) {
+                            entry.type = 'file';
+                        }
+                        if (entry.isDirectory) {
+                            entry.type = 'dir';
+                        }
                     });
 
                     callback(data);

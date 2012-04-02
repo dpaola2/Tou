@@ -65,6 +65,12 @@ def dropbox_ls():
                 result = dict()
                 result['name'] = os.path.basename(f['path'])
                 result['path'] = f['path']
+                result['isDirectory'] = False
+                result['isFile'] = True
+                if f['is_dir']:
+                    result['isDirectory'] = True
+                    result['isFile'] = False
+                
                 results.append(result)
             return json.dumps(results)
         else:
