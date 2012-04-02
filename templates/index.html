@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 {% block title %}Tou Markdown Editor{% endblock %}
 {% block body %}
+  <div class="controls">
+    <div class="icon save" title="Save"></div>
+    <div class="icon open" title="Open"></div>
+  </div>
   <div class="editor"><textarea></textarea></div>
   <div class="preview"></div>
 {% endblock %}
