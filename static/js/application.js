@@ -17,6 +17,7 @@
     var hookup_controls = function () {
         $('.controls .open').on('click', open);
         $('.controls .save').on('click', save_file);
+        $('.controls .touch').on('click', new_file_prompt);
 
         // DnD support. jquery doesn't handle this well, so using
         // the old-school addEventListener.
@@ -33,20 +34,18 @@
         var file = new LocalFile($.data(e.target, 'path'));
         file.read(function(err, contents) {
             reset_editor(contents);
-            $('.tree').hide();
-            $('.app').show();
+            hide_dir_tree();
             file.close(doNothing);
         });
     }
 
     var open = function() {
+        show_dir_tree();
         var dir = new LocalDirectory();
-        $('.app').hide();
-        $('.tree').show();
         dir.ls(function(entries) {
-            var $dir = $('<div class="dir" />');
+            var $dir = $('<ul class="dir" />');
             _.each(entries, function(entry) {
-                var $dirEntry = $('<a href="#" class="entry" />')
+                var $dirEntry = $('<li class="entry" />')
                     .text(entry.name)
                     .data('path', entry.fullPath)
                     .on('click', open_file);
@@ -54,6 +53,18 @@
             });
             $('.tree').append($dir);
         });
+    }
+
+    var show_dir_tree = function() {
+        $('.app').hide();
+        $('body').append('<div class="tree" />');
+        $('.dir-controls').show();
+    }
+
+    var hide_dir_tree = function() {
+        $('.app').show();
+        $('.tree').remove();
+        $('.dir-controls').hide();
     }
 
     var save_file = function() {
@@ -74,6 +85,24 @@
             };
             reader.readAsText(file);
         }
+    }
+
+    var new_file_prompt = function(e) {
+        $input = $('<input type="text" />')
+            .on('keyup', function(e) {
+                if (e.which === 13) {
+                    create_file($input.val());
+                }
+            });
+        $('.tree .dir').append($input);
+    }
+
+    var create_file = function(path) {
+        var file = new LocalFile(path);
+        file.open(function(err) {
+            hide_dir_tree();
+            reset_editor('');
+        });
     }
 
     var show_drop_screen = function(e) {
