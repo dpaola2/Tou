@@ -26,18 +26,10 @@ DROPBOX_CALLBACK    = 'http://%s/dropbox_callback' % host
 DROPBOX_REQUEST_KEY = 'dropbox_request_token'
 DROPBOX_ACCESS_KEY  = 'dropbox_access_token'
 
-
-DROPBOX_SESSION     = dropbox_session.DropboxSession(
-    DROPBOX_KEY,
-    DROPBOX_SECRET,
-    DROPBOX_ACCESS_TYPE
-)
-
-def get_session():
-    return session.DropboxSession(DROPBOX_KEY, DROPBOX_SECRET, DROPBOX_ACCESS_TYPE)
+DROPBOX_SESSION     = dropbox_session.DropboxSession(DROPBOX_KEY, DROPBOX_SECRET, DROPBOX_ACCESS_TYPE)
 
 def get_client(access_token):
-    sess = get_session()
+    sess = DROPBOX_SESSION
     sess.set_token(access_token.key, access_token.secret)
     return dropbox_client.DropboxClient(sess)
 
@@ -57,8 +49,21 @@ def load_file():
         return e.message
 
 @app.route('/load_dropbox_file')
-def load_dropbox_file(filepath):
-    pass
+def load_dropbox_file():
+    dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
+    if dropbox_access_token is None:
+        return "please log into dropbox first"
+
+    filepath = request.args.get('filepath', None)
+    if filepath is None:
+        return "You didn't pass a filepath"
+
+    dropbox_client = get_client(dropbox_access_token)
+    try:
+        f, metadata = dropbox_client.get_file_and_metadata(filepath)
+        return str(f.read())
+    except Exception, e:
+        return e.message
 
 @app.route('/readme')
 def readme():

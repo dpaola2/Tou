@@ -29,6 +29,18 @@
         }
     }
 
+    var open_dropbox_file = function(filename) {
+        $.ajax({
+            url: '/load_dropbox_file',
+            type: 'get',
+            data: {
+                filepath: filename
+            },
+            success: function(data, textStatus, jqxhr) { reset_editor(data); }, 
+            error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }
+        });
+    }
+
     var open_file = function() {
         var file = new LocalFile('the_only_file.md');
         file.read(function(err, contents) {
@@ -87,25 +99,20 @@
         $('.editor textarea').on('input', convert);
     }
 
-    var load_content = function(content) {
-        $('.editor textarea').val(content);
-        convert();
-    }
-
     var load_file = function(url) {
         $.ajax({
             url: "/load_file",
             data: {url: url},
-            success: function(data, textStatus, jqxhr) { load_content(data); }, 
-            error: function(jqxhr, textStatus, errorThrown) { load_content(textStatus); }
+            success: function(data, textStatus, jqxhr) { reset_editor(data); }, 
+            error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }
         });
     }
 
     var load_readme = function() {
         $.ajax({
             url: "/readme",
-            success: function(data, textStatus, jqxhr) { load_content(data); },
-            error: function(jqxhr, textStatus, errorThrown) { load_content(textStatus); }
+            success: function(data, textStatus, jqxhr) { reset_editor(data); },
+            error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }
         });
     }
 
