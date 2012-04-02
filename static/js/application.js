@@ -1,4 +1,7 @@
 (function($, _) {
+    // This is an instance of File class that can be written
+    var current_file;
+
     var setup_controls = function () {
         if (LocalFile.supported()) {
             LocalFile.initialize(function(err) {
@@ -33,6 +36,7 @@
     var open_file = function(e) {
         var file = new LocalFile($.data(e.target, 'path'));
         file.read(function(err, contents) {
+            current_file = file;
             reset_editor(contents);
             hide_dir_tree();
             file.close(doNothing);
@@ -58,19 +62,22 @@
     var show_dir_tree = function() {
         $('.app').hide();
         $('body').append('<div class="tree" />');
-        $('.dir-controls').show();
+        $('.controls .edit').hide();
+        $('.controls .dir').show();
     }
 
     var hide_dir_tree = function() {
         $('.app').show();
         $('.tree').remove();
-        $('.dir-controls').hide();
+        $('.controls .edit').show();
+        $('.controls .dir').hide();
     }
 
     var save_file = function() {
-        var file = new LocalFile('the_only_file.md');
-        file.write($('.editor textarea').val(), function(err) {
-            file.close(doNothing);
+        if (!current_file) {
+        }
+        current_file.write($('.editor textarea').val(), function(err) {
+            current_file.close(doNothing);
         });
     }
 
@@ -95,12 +102,14 @@
                 }
             });
         $('.tree .dir').append($input);
+        $input.focus();
     }
 
     var create_file = function(path) {
         var file = new LocalFile(path);
         file.open(function(err) {
             hide_dir_tree();
+            current_file = file;
             reset_editor('');
         });
     }
