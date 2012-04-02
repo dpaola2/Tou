@@ -312,4 +312,29 @@
             });
         }
     });
+
+    function DropboxDirectory() {}
+    _.extend(DropboxDirectory.prototype, {
+        ls: function(callback) {
+            var results = [];
+            $.ajax({
+                url: '/dropbox_ls',
+                type: 'get',
+                data: { dir: '/' },
+                dataType: 'json',
+                success: function(data, textStatus, jqxhr) {
+                    callback(data)
+                },
+                error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }                
+            });
+        }
+    });
+
+    // i'm not sure, but i'd be willing to bet this is also toxic to kittens:
+    window.show_dropbox = function() {
+        var dropbox = new DropboxDirectory();
+        dropbox.ls(function(entries) {
+            reset_editor(entries)
+        });
+    }
 })(jQuery, _);

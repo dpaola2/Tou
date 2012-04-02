@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import os
+import json
 import requests
 from flask import Flask, flash, render_template, request, redirect, session
 from dropbox import (
@@ -45,6 +46,29 @@ def load_file():
     try:
         r = requests.get(url)
         return r.text
+    except Exception, e:
+        return e.message
+
+@app.route('/dropbox_ls')
+def dropbox_ls():
+    dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
+    if dropbox_access_token is None:
+        return "please log into dropbox first"
+
+    root = request.args.get('dir', '/')
+    dropbox_client = get_client(dropbox_access_token)
+    try:
+        resp = dropbox_client.metadata(root)
+        if 'contents' in resp:
+            results = list()
+            for f in resp['contents']:
+                result = dict()
+                result['name'] = os.path.basename(f['path'])
+                result['path'] = f['path']
+                results.append(result)
+            return json.dumps(results)
+        else:
+            return "malformed response from dropbox:\n %s" % str(resp)
     except Exception, e:
         return e.message
 
