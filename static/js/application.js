@@ -9,17 +9,30 @@
         }
     }
 
+    var stop_event = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
     var hookup_controls = function () {
         $('.controls .open').on('click', open_file);
         $('.controls .save').on('click', save_file);
+
+        // DnD support. jquery doesn't handle this well, so using
+        // the old-school addEventListener.
+        var dropEl = $('body')[0];
+        if (dropEl.addEventListener) {
+            dropEl.addEventListener('dragenter', show_drop_screen);
+            dropEl.addEventListener('dragexit', hide_drop_screen);
+            dropEl.addEventListener('dragover', stop_event);
+            dropEl.addEventListener('drop', upload_file);
+        }
     }
 
     var open_file = function() {
         var file = new LocalFile('the_only_file.md');
         file.read(function(err, contents) {
-            $('.editor textarea').val(contents);
-            focus_editor();
-            convert();
+            reset_editor(contents);
             file.close(doNothing);
         });
     }
@@ -29,6 +42,35 @@
         file.write($('.editor textarea').val(), function(err) {
             file.close(doNothing);
         });
+    }
+
+    var upload_file = function(e) {
+        hide_drop_screen(e);
+        var files = e.dataTransfer.files;
+        if (files.length) {
+            var file = files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                reset_editor(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    var show_drop_screen = function(e) {
+        $('.drop-screen').show();
+        stop_event(e);
+    }
+
+    var hide_drop_screen = function(e) {
+        $('.drop-screen').hide();
+        stop_event(e);
+    }
+
+    var reset_editor = function(new_contents) {
+        $('.editor textarea').val(new_contents);
+        focus_editor();
+        convert();
     }
 
     var focus_editor = function() {
