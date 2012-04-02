@@ -1,4 +1,7 @@
 (function($, _) {
+    // This is an instance of File class that can be written
+    var current_file;
+
     var setup_controls = function () {
         if (LocalFile.supported()) {
             LocalFile.initialize(function(err) {
@@ -15,8 +18,9 @@
     }
 
     var hookup_controls = function () {
-        $('.controls .open').on('click', open_file);
+        $('.controls .open').on('click', open);
         $('.controls .save').on('click', save_file);
+        $('.controls .touch').on('click', new_file_prompt);
 
         // DnD support. jquery doesn't handle this well, so using
         // the old-school addEventListener.
@@ -29,6 +33,7 @@
         }
     }
 
+<<<<<<< HEAD
     var open_dropbox_file = function(filename) {
         $.ajax({
             url: '/load_dropbox_file',
@@ -41,18 +46,51 @@
         });
     }
 
-    var open_file = function() {
-        var file = new LocalFile('the_only_file.md');
+    var open_file = function(e) {
+        var file = new LocalFile($.data(e.target, 'path'));
         file.read(function(err, contents) {
+            current_file = file;
             reset_editor(contents);
+            hide_dir_tree();
             file.close(doNothing);
         });
     }
 
+    var open = function() {
+        show_dir_tree();
+        var dir = new LocalDirectory();
+        dir.ls(function(entries) {
+            var $dir = $('<ul class="dir" />');
+            _.each(entries, function(entry) {
+                var $dirEntry = $('<li class="entry" />')
+                    .text(entry.name)
+                    .data('path', entry.fullPath)
+                    .on('click', open_file);
+                $dir.append($dirEntry);
+            });
+            $('.tree').append($dir);
+        });
+    }
+
+    var show_dir_tree = function() {
+        $('.app').hide();
+        $('body').append('<div class="tree" />');
+        $('.controls .edit').hide();
+        $('.controls .dir').show();
+    }
+
+    var hide_dir_tree = function() {
+        $('.app').show();
+        $('.tree').remove();
+        $('.controls .edit').show();
+        $('.controls .dir').hide();
+    }
+
     var save_file = function() {
-        var file = new LocalFile('the_only_file.md');
-        file.write($('.editor textarea').val(), function(err) {
-            file.close(doNothing);
+        if (!current_file) {
+        }
+        current_file.write($('.editor textarea').val(), function(err) {
+            current_file.close(doNothing);
         });
     }
 
@@ -67,6 +105,26 @@
             };
             reader.readAsText(file);
         }
+    }
+
+    var new_file_prompt = function(e) {
+        $input = $('<input type="text" />')
+            .on('keyup', function(e) {
+                if (e.which === 13) {
+                    create_file($input.val());
+                }
+            });
+        $('.tree .dir').append($input);
+        $input.focus();
+    }
+
+    var create_file = function(path) {
+        var file = new LocalFile(path);
+        file.open(function(err) {
+            hide_dir_tree();
+            current_file = file;
+            reset_editor('');
+        });
     }
 
     var show_drop_screen = function(e) {
@@ -222,6 +280,33 @@
                 });
             }, function(err) {
                 callback(err);
+            });
+        }
+    });
+
+    function LocalDirectory() {
+        this.reader = LocalFile._fs.root.createReader(); // TODO: figure out how this should actually work
+    }
+    _.extend(LocalDirectory.prototype, {
+        // Everything is terrible, so you have to call _readentries repeatedly
+        // until it stops returning results.
+        _readEntries: function(callback) {
+            this.reader.readEntries(function(results) {
+                callback(results);
+            });
+        },
+        ls: function(callback) {
+            var self = this;
+            var results = [];
+            self._readEntries(function appender(entries) {
+                _.each(entries, function(entry) {
+                    results.push(entry);
+                });
+                if (entries.length) {
+                    self._readEntries(appender);
+                } else {
+                    callback(results);
+                }
             });
         }
     });

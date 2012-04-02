@@ -8,7 +8,7 @@ body {
   background-color: #F8F8F8;
 }
 
-html, body{
+html, body, .app {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -46,6 +46,18 @@ html, body{
 
 .controls .dropbox.icon {
   background-image: url('/static/images/dropbox.png');
+}
+
+.controls .mkdir.icon {
+  display: none; /* TODO: need an icon */
+}
+
+.controls .touch.icon {
+  background-image: url('/static/images/plus.png');
+}
+
+.controls .dir {
+  display: none;
 }
 
 .editor {
@@ -95,6 +107,35 @@ textarea:focus {
   z-index: 2; /* Above the editor */
   font-size: 48px;
   font-weight: bold;
+}
+
+.tree {
+  float: left;
+  height: 100%;
+}
+
+.tree .dir {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 300px;
+  border-right: 1px solid #B4B4B4;
+}
+
+.tree .dir .entry {
+  padding: 5px 20px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.tree .dir input {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 5px 0;
+  line-height: 20px;
+  border: none;
+  outline: none;
 }
 
   </style>
