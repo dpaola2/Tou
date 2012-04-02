@@ -15,7 +15,7 @@
     }
 
     var hookup_controls = function () {
-        $('.controls .open').on('click', open_file);
+        $('.controls .open').on('click', open);
         $('.controls .save').on('click', save_file);
 
         // DnD support. jquery doesn't handle this well, so using
@@ -29,11 +29,30 @@
         }
     }
 
-    var open_file = function() {
-        var file = new LocalFile('the_only_file.md');
+    var open_file = function(e) {
+        var file = new LocalFile($.data(e.target, 'path'));
         file.read(function(err, contents) {
             reset_editor(contents);
+            $('.tree').hide();
+            $('.app').show();
             file.close(doNothing);
+        });
+    }
+
+    var open = function() {
+        var dir = new LocalDirectory();
+        $('.app').hide();
+        $('.tree').show();
+        dir.ls(function(entries) {
+            var $dir = $('<div class="dir" />');
+            _.each(entries, function(entry) {
+                var $dirEntry = $('<a href="#" class="entry" />')
+                    .text(entry.name)
+                    .data('path', entry.fullPath)
+                    .on('click', open_file);
+                $dir.append($dirEntry);
+            });
+            $('.tree').append($dir);
         });
     }
 
@@ -215,6 +234,33 @@
                 });
             }, function(err) {
                 callback(err);
+            });
+        }
+    });
+
+    function LocalDirectory() {
+        this.reader = LocalFile._fs.root.createReader(); // TODO: figure out how this should actually work
+    }
+    _.extend(LocalDirectory.prototype, {
+        // Everything is terrible, so you have to call _readentries repeatedly
+        // until it stops returning results.
+        _readEntries: function(callback) {
+            this.reader.readEntries(function(results) {
+                callback(results);
+            });
+        },
+        ls: function(callback) {
+            var self = this;
+            var results = [];
+            self._readEntries(function appender(entries) {
+                _.each(entries, function(entry) {
+                    results.push(entry);
+                });
+                if (entries.length) {
+                    self._readEntries(appender);
+                } else {
+                    callback(results);
+                }
             });
         }
     });
