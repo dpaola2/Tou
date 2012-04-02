@@ -45,8 +45,7 @@
         });
     }
 
-    var open_file = function(e) {
-        var file = new LocalFile($.data(e.target, 'path'));
+    var open_file = function(file) {
         file.read(function(err, contents) {
             current_file = file;
             reset_editor(contents);
@@ -57,18 +56,32 @@
 
     var open = function() {
         show_dir_tree();
-        var dir = new LocalDirectory();
+        render_dir(new ServiceDirectory());
+    }
+
+    var render_dir = function(dir) {
         dir.ls(function(entries) {
             var $dir = $('<ul class="dir" />');
             _.each(entries, function(entry) {
                 var $dirEntry = $('<li class="entry" />')
                     .text(entry.name)
-                    .data('path', entry.path)
-                    .on('click', open_file);
+                    .data('meta', entry)
+                    .on('click', descend);
                 $dir.append($dirEntry);
             });
             $('.tree').append($dir);
         });
+    }
+
+    var descend = function(e) {
+        var entry = $.data(e.target, 'meta');
+        if (entry.type === 'dir') {
+            var dir = new entry.reader(entry.path);
+            return render_dir(dir);
+        } else if (entry.type === 'file') {
+            var file = new entry.reader(entry.path);
+            return open_file(file);
+        }
     }
 
     var show_dir_tree = function() {
@@ -113,7 +126,7 @@
                     create_file($input.val());
                 }
             });
-        $('.tree .dir').append($input);
+        $('.tree .dir').last().append($input);
         $input.focus();
     }
 
@@ -299,10 +312,22 @@
             var results = [];
             self._readEntries(function appender(entries) {
                 _.each(entries, function(entry) {
-                    results.push({
+                    var result = {
                         name: entry.name,
-                        path: entry.fullPath
-                    });
+                        path: entry.fullPath,
+                    };
+                    if (entry.isFile) {
+                        _.extend(result, {
+                            reader: LocalFile,
+                            type: 'file'
+                        });
+                    } else if (entry.isDirectory) {
+                        _.extend(result, {
+                            reader: LocalDirectory,
+                            type: 'directory'
+                        });
+                    }
+                    results.push(result);
                 });
                 if (entries.length) {
                     self._readEntries(appender);
@@ -310,6 +335,18 @@
                     callback(results);
                 }
             });
+        }
+    });
+
+    function ServiceDirectory() {}
+    _.extend(ServiceDirectory.prototype, {
+        ls: function(callback) {
+            var services = [];
+            if (LocalFile.supported()) {
+                services.push({ name: 'Local', path: '/local', type: 'dir', reader: LocalDirectory });
+            }
+            /* services.push({ name: 'Dropbox', path: '/dropbox', type: 'dir', reader: DropboxDirectory }); */
+            callback(services);
         }
     });
 })(jQuery, _);
