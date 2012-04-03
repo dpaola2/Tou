@@ -408,11 +408,18 @@
     _.extend(ServiceDirectory.prototype, {
         ls: function(callback) {
             var services = [];
-            if (LocalFile.supported()) {
-                services.push({ name: 'Local', type: 'dir', reader: LocalDirectory });
-            }
+            //TODO: determine if dropbox is supported
             services.push({ name: 'Dropbox', type: 'dir', reader: DropboxDirectory });
-            callback(services);
+            if (LocalFile.supported()) {
+                LocalFile.initialize(function(err) {
+                    if (!err) {
+                        services.push({ name: 'Local', type: 'dir', reader: LocalDirectory });
+                    }
+                    callback(services);
+                });
+            } else {
+                callback(services);
+            }
         }
     });
 })(jQuery, _);
