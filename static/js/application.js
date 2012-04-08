@@ -354,6 +354,7 @@
     }
     _.extend(DropboxDirectory.prototype, {
         read: function(callback) {
+            console.log("dropbox read");
             $.ajax({
                 url: '/load_dropbox_file',
                 type: 'get',
@@ -364,10 +365,11 @@
                 error: function(jqxhr, textStatus, errorThrown) { callback(textStatus); }
             });
         },
-        close: function(callback) {}, // TODO
-        open: function(callback) {}, // TODO
-        del: function(callback) {}, // TODO
+        close: function(callback) { console.log("dropbox close"); }, // TODO
+        open: function(callback) { console.log("dropbox open"); }, // TODO
+        del: function(callback) { console.log("dropbox del"); }, // TODO
         write: function(contents, callback) {
+            console.log("dropbox write");
             $.ajax({
                 url: '/dropbox_save',
                 type: 'post',
@@ -380,6 +382,7 @@
             });
         }, //TODO
         ls: function(callback) {
+            console.log("dropbox ls");
             var results = [];
             $.ajax({
                 url: '/dropbox_ls',
