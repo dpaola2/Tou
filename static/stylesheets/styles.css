@@ -110,12 +110,15 @@ html, body, .app {
   width: 300px;
   border-right: 1px solid #B4B4B4;
   float: left;
+  overflow-y: auto;
 }
 
 .tree .dir .entry {
   padding: 5px 20px;
   cursor: pointer;
   list-style: none;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .tree .dir input {
