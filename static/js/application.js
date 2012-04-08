@@ -1,5 +1,5 @@
 
-(function($, _) {
+define(function() {
     // This is an instance of File class that can be written
     var current_file;
     var current_dir;
@@ -186,24 +186,6 @@
             error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }
         });
     }
-
-    var setup = function() {
-        window.ace = ace;
-        hookup_controls();
-        focus_editor();
-        start_converting();
-        load_readme();
-    }
-
-    $(function() {
-        require.config({
-            baseUrl: "/static/js/lib",
-        });
-        require(['ace/ace', '/static/js/lib/markdown.js'], function(ace) {
-            window.ace = ace;
-            setup();
-        });
-    });
 
     function doNothing() {}
 
@@ -452,4 +434,11 @@
             }
         }
     });
-})(jQuery, _);
+
+    return function() {
+        hookup_controls();
+        focus_editor();
+        start_converting();
+        load_readme();
+    };
+});
