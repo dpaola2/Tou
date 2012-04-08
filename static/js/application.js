@@ -14,6 +14,12 @@
         $('.controls .save').on('click', save_file);
         $('.controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
         $('.controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
+        var editor_div = $('.editor')[0];
+        window.editor = ace.edit(editor_div);
+        window.editor.setTheme('ace/theme/textmate');
+        window.editor.renderer.setShowGutter(false);
+        window.editor.getSession().setUseWrapMode(true);
+        window.editor.setShowPrintMargin(false);
 
         // DnD support. jquery doesn't handle this well, so using
         // the old-school addEventListener.
@@ -139,23 +145,23 @@
     }
 
     var reset_editor = function(new_contents) {
-        $('.editor textarea').val(new_contents);
+        window.editor.getSession().setValue(new_contents);
         focus_editor();
         convert();
     }
 
     var focus_editor = function() {
-        $('.editor textarea').focus();
+        window.editor.focus();
     }
 
     var convert = function() {
-        raw_input = $('.editor textarea').val();
+        raw_input = window.editor.getSession().getValue();
         content = markdown.toHTML(raw_input);
         $('.preview').html(content);
     }
 
     var start_converting = function() {
-        $('.editor textarea').on('input', convert);
+        window.editor.getSession().on('change', convert);
     }
 
     var load_file = function(url) {
