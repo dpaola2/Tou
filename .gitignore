@@ -1,7 +1,7 @@
 *.pyc
-lib
-bin
-include
+/lib
+/bin
+/include
 .Python
-build
+./build
 .DS_Store
