@@ -10,6 +10,7 @@
     }
 
     var hookup_controls = function () {
+
         $('.controls .open').on('click', open);
         $('.controls .save').on('click', save_file);
         $('.controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
@@ -19,6 +20,9 @@
         window.editor.setTheme('ace/theme/textmate');
         window.editor.renderer.setShowGutter(false);
         window.editor.getSession().setUseWrapMode(true);
+        require(['ace/mode/markdown'], function(mode) {
+            window.editor.getSession().setMode(new mode.Mode());
+        });
         window.editor.setShowPrintMargin(false);
         window.editor.commands.removeCommand('gotoline'); // uses CTRL/CMD-L which is annoying
 
@@ -183,13 +187,22 @@
     }
 
     var setup = function() {
+        window.ace = ace;
         hookup_controls();
         focus_editor();
         start_converting();
         load_readme();
     }
 
-    $(setup);
+    $(function() {
+        require.config({
+            baseUrl: "/static/js/lib",
+        });
+        require(['ace/ace', '/static/js/lib/markdown.js'], function(ace) {
+            window.ace = ace;
+            setup();
+        });
+    });
 
     function doNothing() {}
 
