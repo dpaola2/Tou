@@ -18,6 +18,7 @@
         var editor_div = $('.editor')[0];
         window.editor = ace.edit(editor_div);
         window.editor.setTheme('ace/theme/textmate');
+        window.editor.setHighlightActiveLine(false);
         window.editor.renderer.setShowGutter(false);
         window.editor.getSession().setUseWrapMode(true);
         require(['ace/mode/markdown'], function(mode) {
