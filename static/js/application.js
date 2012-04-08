@@ -20,6 +20,7 @@
         window.editor.renderer.setShowGutter(false);
         window.editor.getSession().setUseWrapMode(true);
         window.editor.setShowPrintMargin(false);
+        window.editor.commands.removeCommand('gotoline'); // uses CTRL/CMD-L which is annoying
 
         // DnD support. jquery doesn't handle this well, so using
         // the old-school addEventListener.
