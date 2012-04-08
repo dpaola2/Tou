@@ -425,6 +425,12 @@
                 },
                 error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }                
             });
+        },
+        touch: function() {
+            console.error('dropbox touch not implemented');
+        },
+        mkdir: function() {
+            console.error('dropbox mkdir not implemented');
         }
     });
 
