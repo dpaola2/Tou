@@ -52,7 +52,7 @@ define(function() {
 
                     callback(data);
                 },
-                error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }                
+                error: function(jqxhr, textStatus, errorThrown) { console.error(textStatus); }
             });
         },
         touch: function() {
