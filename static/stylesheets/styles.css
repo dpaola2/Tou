@@ -132,3 +132,8 @@ html, body, .app {
   border: none;
   outline: none;
 }
+
+.tree .spinner {
+  float: left;
+  margin: 40px 130px;
+}

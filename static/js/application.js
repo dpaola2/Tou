@@ -1,7 +1,20 @@
-define(['fs/services'], function(services, local) {
+define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     // This is an instance of File class that can be written
     var current_file;
     var current_dir;
+
+    // a spinner for indicating loading
+    // options here: http://fgnass.github.com/spin.js/#?lines=12&length=5&width=2&radius=5&rotate=5&trail=60&speed=1.2&hwaccel=on
+    var spinner = new Spinner({
+        lines: 12,
+        length: 5,
+        width: 2,
+        radius: 5,
+        rotate: 5,
+        trail: 60,
+        speed: 1.2,
+        hwaccel: true
+    });
 
     // The ace editor
     var editor;
@@ -60,6 +73,8 @@ define(['fs/services'], function(services, local) {
     }
 
     var render_dir = function(dir) {
+        spinner.spin();
+        $('.tree').append(spinner.el);
         dir.ls(function(entries) {
             var $dir = $('<ul class="dir" />');
             _.each(entries, function(entry) {
@@ -70,6 +85,7 @@ define(['fs/services'], function(services, local) {
                     .on('click', descend);
                 $dir.append($dirEntry);
             });
+            spinner.stop();
             $('.tree').append($dir);
         });
     }
