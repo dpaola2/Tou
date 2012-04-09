@@ -16,6 +16,7 @@ define(['fs/services'], function(services, local) {
         $('.controls .save').on('click', save_file);
         $('.controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
         $('.controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
+        $('.controls .cancel').on('click', _.bind(hide_dir_tree, null, null));
         var editor_div = $('.editor')[0];
         window.editor = ace.edit(editor_div);
         window.editor.setTheme('ace/theme/textmate');
