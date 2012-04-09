@@ -2,6 +2,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     // This is an instance of File class that can be written
     var current_file;
     var current_dir;
+    var $current_dir; // the dom node that represents the current directory
 
     // a spinner for indicating loading
     // options here: http://fgnass.github.com/spin.js/#?lines=12&length=5&width=2&radius=5&rotate=5&trail=60&speed=1.2&hwaccel=on
@@ -87,6 +88,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
             });
             spinner.stop();
             $('.tree').append($dir);
+            $current_dir = $dir;
         });
     }
 
@@ -120,6 +122,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
         $('body').append('<div class="tree" />');
         $('#controls .edit').hide();
         $('#controls .dir').show();
+        hookup_tree_nav();
     }
 
     var hide_dir_tree = function() {
@@ -127,6 +130,70 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
         $('.tree').remove();
         $('#controls .edit').show();
         $('#controls .dir').hide();
+        unhook_tree_nav();
+    }
+
+    var hookup_tree_nav = function() {
+        $(document).on('keydown', function(e) {
+            var stop = true;
+            var $new_selection;
+            switch(e.which) {
+                // left arrow
+                case 37:
+                    $current_dir = $current_dir.prev('.dir');
+                    $new_selection = $current_dir.find('.selected');
+                    break;
+                // up arrow
+                case 38:
+                    $new_selection = $current_dir.find('.current').prev();
+                    if ($new_selection.length == 0) {
+                        $new_selection = $current_dir.children().last();
+                    }
+                    break;
+                // enter
+                case 13:
+                // right arrow
+                case 39:
+                    descend({
+                        target: $current_dir.find('.current')[0]
+                    });
+                    break;
+                // down arrow
+                case 40:
+                    $new_selection = $current_dir.find('.current').next();
+                    if ($new_selection.length == 0) {
+                        $new_selection = $current_dir.children().first();
+                    }
+                    break;
+                default:
+                    stop = false;
+                    break;
+            }
+            if ($new_selection) {
+                select_new_file($new_selection);
+            }
+            if (stop) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+    }
+
+    var select_new_file = function($new_selection) {
+        var offset = $new_selection.offset();
+        var bottom = $new_selection.outerHeight() + offset.top;
+        var tree_height = $('.tree').height();
+        var $current = $('.tree .current');
+        if (bottom > tree_height) {
+            $current_dir.scrollTop($current_dir.scrollTop() + (bottom - tree_height));
+        } else if (offset.top < 0) {
+            $current_dir.scrollTop($current_dir.scrollTop() + offset.top);
+        }
+        $new_selection.addClass('current');
+        $current.removeClass('current');
+    }
+
+    var unhook_tree_nav = function() {
     }
 
     var save_file = function() {
