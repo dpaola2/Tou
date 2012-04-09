@@ -1,4 +1,4 @@
-define(['fs/dropbox', 'fs/local'], function(dropbox, local) {
+define(['fs/services'], function(services, local) {
     // This is an instance of File class that can be written
     var current_file;
     var current_dir;
@@ -50,7 +50,7 @@ define(['fs/dropbox', 'fs/local'], function(dropbox, local) {
 
     var open = function() {
         show_dir_tree();
-        render_dir(new ServiceDirectory());
+        render_dir(new services.Directory());
     }
 
     var render_dir = function(dir) {
@@ -186,25 +186,6 @@ define(['fs/dropbox', 'fs/local'], function(dropbox, local) {
             error: function(jqxhr, textStatus, errorThrown) { reset_editor(textStatus); }
         });
     }
-
-    function ServiceDirectory() {}
-    _.extend(ServiceDirectory.prototype, {
-        ls: function(callback) {
-            var services = [];
-            //TODO: determine if dropbox is supported
-            services.push({ name: 'Dropbox', type: 'dir', reader: dropbox.Directory });
-            if (local.File.supported()) {
-                local.File.initialize(function(err) {
-                    if (!err) {
-                        services.push({ name: 'Local', type: 'dir', reader: local.Directory });
-                    }
-                    callback(services);
-                });
-            } else {
-                callback(services);
-            }
-        }
-    });
 
     return function() {
         hookup_controls();
