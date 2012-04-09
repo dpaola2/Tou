@@ -5,7 +5,7 @@ define(function() {
     _.extend(DropboxDirectory.prototype, {
         read: function(callback) {
             $.ajax({
-                url: '/load_dropbox_file',
+                url: '/dropbox/read',
                 type: 'get',
                 data: {
                     filepath: this.path
@@ -23,7 +23,7 @@ define(function() {
         write: function(contents, callback) {
             var self = this;
             $.ajax({
-                url: '/dropbox_save',
+                url: '/dropbox/save',
                 type: 'post',
                 data: {
                     filepath: self.path,
@@ -36,7 +36,7 @@ define(function() {
         ls: function(callback) {
             var results = [];
             $.ajax({
-                url: '/dropbox_ls',
+                url: '/dropbox/ls',
                 type: 'get',
                 data: { dir: this.path || '/' },
                 dataType: 'json',
@@ -81,7 +81,7 @@ define(function() {
                 fullpath = self.path + "/" + name;
             }
             $.ajax({
-                url: '/dropbox_mkdir',
+                url: '/dropbox/mkdir',
                 type: 'post',
                 data: { path: fullpath },
                 success: function(data, textStatus, jqxhr) {
