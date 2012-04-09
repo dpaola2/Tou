@@ -62,23 +62,12 @@ html, body, .app {
   display: none;
 }
 
-.editor_container {
+#editor {
   position: relative;
   float: left;
   width: 45%;
   height: 100%;
   background-color: #fff;
-  padding-left: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 0px;
-}
-
-.editor {
-  position: relative;
-  float: left;
-  width: 100%;
-  height: 100%;
 }
 
 .preview {

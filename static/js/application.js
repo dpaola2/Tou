@@ -17,7 +17,7 @@ define(['fs/services'], function(services, local) {
         $('.controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
         $('.controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
         $('.controls .cancel').on('click', hide_dir_tree);
-        var editor_div = $('.editor')[0];
+        var editor_div = $('#editor')[0];
         window.editor = ace.edit(editor_div);
         window.editor.setTheme('ace/theme/textmate');
         window.editor.setHighlightActiveLine(false);
