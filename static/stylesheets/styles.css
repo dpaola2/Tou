@@ -114,6 +114,10 @@ html, body, .app {
 }
 
 .tree .dir .entry.selected {
+  background: #ccc;
+}
+
+.tree .dir .entry.selected.current {
   color: white;
   background: #5398ee;
 }

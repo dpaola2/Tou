@@ -76,7 +76,19 @@ define(['fs/services'], function(services, local) {
 
     var descend = function(e) {
         var entry = $.data(e.target, 'meta');
-        $(e.target).addClass('selected');
+        var $file = $(e.target);
+        var $parent = $file.parent('.dir')
+        $parent.find('.selected').removeClass('selected');
+        $('.selected.current').removeClass('current');
+        $file.addClass('selected current');
+        var remove;
+        _.each($('.tree .dir'), function(dirEl) {
+            if (remove) {
+                $(dirEl).remove();
+            } else if (dirEl === $parent[0]) {
+                remove = true;
+            }
+        });
         if (entry.type === 'dir') {
             var dir = new entry.reader(entry.path);
             current_dir = dir;
