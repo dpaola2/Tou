@@ -10,10 +10,10 @@ define(['./dropbox', './local'], function(dropbox, local) {
                     if (!err) {
                         services.push({ name: 'Local', type: 'dir', reader: local.Directory });
                     }
-                    callback(services);
+                    callback(null, services);
                 });
             } else {
-                callback(services);
+                callback(null, services);
             }
         }
     });

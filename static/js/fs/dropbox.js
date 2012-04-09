@@ -51,9 +51,12 @@ define(function() {
                         }
                     });
 
-                    callback(data);
+                    callback(null, data);
                 },
-                error: function(jqxhr, textStatus, errorThrown) { console.error(textStatus); }
+                error: function(jqxhr, textStatus, errorThrown) {
+                    console.error(textStatus);
+                    callback(textStatus);
+                }
             });
         },
         touch: function(name, callback) {
