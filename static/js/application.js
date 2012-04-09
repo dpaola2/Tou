@@ -76,7 +76,12 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     var render_dir = function(dir) {
         spinner.spin();
         $('.tree').append(spinner.el);
-        dir.ls(function(entries) {
+        dir.ls(function(err, entries) {
+            if (err) {
+                //TODO: tell the user there was a problem
+                console.error(err);
+                return;
+            }
             var $dir = $('<ul class="dir" />');
             _.each(entries, function(entry) {
                 var $dirEntry = $('<li class="entry" />')

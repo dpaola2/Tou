@@ -142,7 +142,7 @@ define(function() {
                     if (entries.length) {
                         self._readEntries(appender);
                     } else {
-                        callback(results);
+                        callback(null, results);
                     }
                 });
             });
