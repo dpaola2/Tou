@@ -19,12 +19,13 @@ define(function() {
         open: function(callback) { console.log("dropbox open"); }, // TODO
         del: function(callback) { console.log("dropbox del"); }, // TODO
         write: function(contents, callback) {
+            var self = this;
             console.log("dropbox write");
             $.ajax({
                 url: '/dropbox_save',
                 type: 'post',
                 data: {
-                    filepath: this.path,
+                    filepath: self.path,
                     contents: contents
                 },
                 success: function(data, textStatus, jqxhr) { callback(null, data); }, 
@@ -56,10 +57,27 @@ define(function() {
             });
         },
         touch: function() {
-            console.error('dropbox touch not implemented');
+            console.log("dropbox touch");
         },
-        mkdir: function() {
-            console.error('dropbox mkdir not implemented');
+        mkdir: function(name, callback) {
+            console.log("dropbox mkdir");
+            var self = this;
+            var fullpath = self.path + "/" + name;
+            $.ajax({
+                url: '/dropbox_mkdir',
+                type: 'post',
+                data: { path: fullpath },
+                dataType: 'json',
+                success: function(data, textStatus, jqxhr) {
+                    console.log(data);
+                    self.path = fullpath;
+                    callback(null);
+                },
+                error: function(jqxhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    callback(errorThrown);
+                }
+            });
         }
     });
 

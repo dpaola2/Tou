@@ -49,6 +49,24 @@ def load_file():
     except Exception, e:
         return e.message
 
+@app.route('/dropbox_mkdir', methods=['POST'])
+def dropbox_mkdir():
+    dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
+    if dropbox_access_token is None:
+        return "please log into dropbox first"
+
+    dropbox_client = get_client(dropbox_access_token)
+    root = request.form.get('root', '/')
+    directory = request.form.get('path', None)
+    if directory is None:
+        return "You didn't specify a path"
+
+    try:
+        dropbox_client.create_folder(root=root, path=directory)
+        return directory
+    except Exception, e:
+        return e.message
+
 @app.route('/dropbox_save', methods=['POST'])
 def dropbox_save():
     dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
