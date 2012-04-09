@@ -31,7 +31,7 @@ html, body, .app {
 }
 
 .controls .open.icon {
-  background-image: url('/static/images/folder.png');
+  background-image: url('/static/images/open.png');
 }
 
 .controls .save.icon {
@@ -43,15 +43,19 @@ html, body, .app {
 }
 
 .controls .logout.icon {
-  background-image: url('/static/images/key.png');
+  background-image: url('/static/images/logout.png');
 }
 
 .controls .mkdir.icon {
-  background-image: url('/static/images/pages.png');
+  background-image: url('/static/images/forward.png');
 }
 
 .controls .touch.icon {
-  background-image: url('/static/images/plus.png');
+  background-image: url('/static/images/new_doc.png');
+}
+
+.controls .cancel.icon {
+  background-image: url('/static/images/back.png');
 }
 
 .controls .dir {
