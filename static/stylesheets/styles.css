@@ -9,14 +9,14 @@ html, body, .app {
   height: 100%;
 }
 
-.controls {
+#controls {
   float: left;
   width: 52px;
   height: 100%;
   box-shadow: inset -2px 0px 6px 0px rgba(0,0,0,0.2);
 }
 
-.controls .icon {
+#controls .icon {
   background-position: center;
   background-repeat: no-repeat;
   margin: 20px 0;
@@ -26,55 +26,53 @@ html, body, .app {
   cursor: pointer;
 }
 
-.controls .icon:hover {
+#controls .icon:hover {
   opacity: 1;
 }
 
-.controls .open.icon {
+#controls .open.icon {
   background-image: url('/static/images/open.png');
 }
 
-.controls .save.icon {
+#controls .save.icon {
   background-image: url('/static/images/save.png');
 }
 
-.controls .dropbox.icon {
+#controls .dropbox.icon {
   background-image: url('/static/images/dropbox.png');
 }
 
-.controls .logout.icon {
+#controls .logout.icon {
   background-image: url('/static/images/logout.png');
 }
 
-.controls .mkdir.icon {
+#controls .mkdir.icon {
   background-image: url('/static/images/forward.png');
 }
 
-.controls .touch.icon {
+#controls .touch.icon {
   background-image: url('/static/images/new_doc.png');
 }
 
-.controls .cancel.icon {
+#controls .cancel.icon {
   background-image: url('/static/images/back.png');
 }
 
-.controls .dir {
+#controls .dir {
   display: none;
 }
 
 #editor {
   position: relative;
   float: left;
-  width: 45%;
   height: 100%;
   background-color: #fff;
 }
 
-.preview {
+#preview {
   height: 100%;
-  width: 45%;
   float: right;
-  overflow: auto;
+  overflow-y: scroll;
 }
 
 .drop-screen {

@@ -41,6 +41,8 @@ define(['fs/services'], function(services, local) {
             dropEl.addEventListener('dragover', stop_event);
             dropEl.addEventListener('drop', upload_file);
         }
+
+        $(window).resize(size);
     }
 
     var open_file = function(file) {
@@ -168,7 +170,7 @@ define(['fs/services'], function(services, local) {
     var convert = function() {
         raw_input = editor.getSession().getValue();
         content = markdown.toHTML(raw_input);
-        $('.preview').html(content);
+        $('#preview').html(content);
     }
 
     var start_converting = function() {
@@ -192,7 +194,15 @@ define(['fs/services'], function(services, local) {
         });
     }
 
+    var size = function() {
+        var controls_width = $('#controls').width();
+        var window_width = $(window).width();
+        var pane_width = Math.floor((window_width - controls_width)/2);
+        $('#editor,#preview').width(pane_width);
+    }
+
     return function() {
+        size();
         hookup_controls();
         focus_editor();
         start_converting();

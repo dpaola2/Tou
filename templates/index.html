@@ -2,7 +2,7 @@
 {% block title %}Tou Markdown Editor{% endblock %}
 {% block body %}
   <div class="drop-screen">Drop file to edit.</div>
-  <div class="controls">
+  <div id="controls">
     <div class="edit">
       <div class="icon save" title="Save"></div>
       <div class="icon open" title="Open"></div>
@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="app">
-    <div id="editor"></div>
-    <div class="preview"></div>
+    <div id="editor" class="pane"></div>
+    <div id="preview" class="pane"></div>
   </div>
 {% endblock %}
