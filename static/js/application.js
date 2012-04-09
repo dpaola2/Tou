@@ -139,49 +139,55 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     }
 
     var hookup_tree_nav = function() {
-        $(document).on('keydown', function(e) {
-            var stop = true;
-            var $new_selection;
-            switch(e.which) {
-                // left arrow
-                case 37:
-                    $current_dir = $current_dir.prev('.dir');
-                    $new_selection = $current_dir.find('.selected');
-                    break;
-                // up arrow
-                case 38:
-                    $new_selection = $current_dir.find('.current').prev();
-                    if ($new_selection.length == 0) {
-                        $new_selection = $current_dir.children().last();
-                    }
-                    break;
-                // enter
-                case 13:
-                // right arrow
-                case 39:
-                    descend({
-                        target: $current_dir.find('.current')[0]
-                    });
-                    break;
-                // down arrow
-                case 40:
-                    $new_selection = $current_dir.find('.current').next();
-                    if ($new_selection.length == 0) {
-                        $new_selection = $current_dir.children().first();
-                    }
-                    break;
-                default:
-                    stop = false;
-                    break;
-            }
-            if ($new_selection) {
-                select_new_file($new_selection);
-            }
-            if (stop) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        });
+        $(document).on('keydown', handle_tree_keydown);
+    }
+
+    var unhook_tree_nav = function() {
+        $(document).off('keydown', handle_tree_keydown);
+    }
+
+    var handle_tree_keydown = function(e) {
+        var stop = true;
+        var $new_selection;
+        switch(e.which) {
+            // left arrow
+            case 37:
+                $current_dir = $current_dir.prev('.dir');
+                $new_selection = $current_dir.find('.selected');
+                break;
+            // up arrow
+            case 38:
+                $new_selection = $current_dir.find('.current').prev();
+                if ($new_selection.length == 0) {
+                    $new_selection = $current_dir.children().last();
+                }
+                break;
+            // enter
+            case 13:
+            // right arrow
+            case 39:
+                descend({
+                    target: $current_dir.find('.current')[0]
+                });
+                break;
+            // down arrow
+            case 40:
+                $new_selection = $current_dir.find('.current').next();
+                if ($new_selection.length == 0) {
+                    $new_selection = $current_dir.children().first();
+                }
+                break;
+            default:
+                stop = false;
+                break;
+        }
+        if ($new_selection) {
+            select_new_file($new_selection);
+        }
+        if (stop) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
     }
 
     var select_new_file = function($new_selection) {
@@ -196,9 +202,6 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
         }
         $new_selection.addClass('current');
         $current.removeClass('current');
-    }
-
-    var unhook_tree_nav = function() {
     }
 
     var save_file = function() {
