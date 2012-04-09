@@ -1,6 +1,7 @@
 define(function() {
     function DropboxDirectory(path) {
         this.path = path;
+        console.log("new dropboxdirectory: " + path);
     }
     _.extend(DropboxDirectory.prototype, {
         read: function(callback) {
@@ -62,12 +63,17 @@ define(function() {
         mkdir: function(name, callback) {
             console.log("dropbox mkdir");
             var self = this;
-            var fullpath = self.path + "/" + name;
+            var fullpath = null;
+            if (self.path === "/" || self.path === undefined) {
+                fullpath = "/" + name;
+            }
+            else {
+                fullpath = self.path + "/" + name;
+            }
             $.ajax({
                 url: '/dropbox_mkdir',
                 type: 'post',
                 data: { path: fullpath },
-                dataType: 'json',
                 success: function(data, textStatus, jqxhr) {
                     console.log(data);
                     self.path = fullpath;

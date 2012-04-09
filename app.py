@@ -56,13 +56,12 @@ def dropbox_mkdir():
         return "please log into dropbox first"
 
     dropbox_client = get_client(dropbox_access_token)
-    root = request.form.get('root', '/')
     directory = request.form.get('path', None)
     if directory is None:
         return "You didn't specify a path"
 
     try:
-        dropbox_client.create_folder(root=root, path=directory)
+        dropbox_client.file_create_folder(directory)
         return directory
     except Exception, e:
         return e.message
