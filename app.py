@@ -23,7 +23,7 @@ PORT                = int(os.environ.get("PORT", '5000'))
 DROPBOX_KEY         = 'whxozioi915s2wr'
 DROPBOX_SECRET      = '9605perofirq9tg'
 DROPBOX_ACCESS_TYPE = 'dropbox'
-DROPBOX_CALLBACK    = 'http://%s/dropbox_callback' % host
+DROPBOX_CALLBACK    = 'http://%s/dropbox/callback' % host
 DROPBOX_REQUEST_KEY = 'dropbox_request_token'
 DROPBOX_ACCESS_KEY  = 'dropbox_access_token'
 
@@ -49,7 +49,7 @@ def load_file():
     except Exception, e:
         return e.message
 
-@app.route('/dropbox_mkdir', methods=['POST'])
+@app.route('/dropbox/mkdir', methods=['POST'])
 def dropbox_mkdir():
     dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
     if dropbox_access_token is None:
@@ -66,7 +66,7 @@ def dropbox_mkdir():
     except Exception, e:
         return e.message
 
-@app.route('/dropbox_save', methods=['POST'])
+@app.route('/dropbox/save', methods=['POST'])
 def dropbox_save():
     dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
     if dropbox_access_token is None:
@@ -86,7 +86,7 @@ def dropbox_save():
     except Exception, e:
         return e.message
 
-@app.route('/dropbox_ls')
+@app.route('/dropbox/ls')
 def dropbox_ls():
     dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
     if dropbox_access_token is None:
@@ -115,7 +115,7 @@ def dropbox_ls():
     except Exception, e:
         return e.message
 
-@app.route('/load_dropbox_file')
+@app.route('/dropbox/read')
 def load_dropbox_file():
     dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
     if dropbox_access_token is None:
@@ -136,7 +136,7 @@ def load_dropbox_file():
 def readme():
     return open("README.md").read()
 
-@app.route('/link_dropbox')
+@app.route('/dropbox/link')
 def link_dropbox():
     if session.get(DROPBOX_ACCESS_KEY, False):
         return redirect('/')
@@ -146,7 +146,7 @@ def link_dropbox():
     url = DROPBOX_SESSION.build_authorize_url(request_token, oauth_callback = DROPBOX_CALLBACK)
     return redirect(url)
 
-@app.route('/dropbox_callback')
+@app.route('/dropbox/callback')
 def dropbox_callback():
     request_token_key = request.args.get('oauth_token', None)
     if request_token_key is None:
