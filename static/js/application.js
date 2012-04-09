@@ -132,7 +132,8 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     var save_file = function() {
         if (!current_file) {
         }
-        current_file.write($('#editor textarea').val(), function(err) {
+        var contents = editor.getSession().getValue();
+        current_file.write(contents, function(err) {
             current_file.close(doNothing);
         });
     }
@@ -166,6 +167,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
             current_dir.touch(name, function(err, file) {
                 hide_dir_tree();
                 current_file = file;
+                console.log("current_file: " + current_file);
                 reset_editor('');
             });
         } else if (type == 'dir') {
