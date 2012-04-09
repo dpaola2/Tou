@@ -76,6 +76,7 @@ define(['fs/services'], function(services, local) {
 
     var descend = function(e) {
         var entry = $.data(e.target, 'meta');
+        $(e.target).addClass('selected');
         if (entry.type === 'dir') {
             var dir = new entry.reader(entry.path);
             current_dir = dir;

@@ -113,6 +113,11 @@ html, body, .app {
   white-space: nowrap;
 }
 
+.tree .dir .entry.selected {
+  color: white;
+  background: #5398ee;
+}
+
 .tree .dir input {
   display: block;
   width: 100%;
