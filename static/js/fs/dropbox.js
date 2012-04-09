@@ -4,7 +4,6 @@ define(function() {
     }
     _.extend(DropboxDirectory.prototype, {
         read: function(callback) {
-            console.log("dropbox read");
             $.ajax({
                 url: '/load_dropbox_file',
                 type: 'get',
@@ -16,15 +15,18 @@ define(function() {
             });
         },
         close: function(callback) { console.log("dropbox close"); }, // TODO
-        open: function(callback) { console.log("dropbox open"); }, // TODO
+        open: function(callback) { 
+            var self = this;
+            this.write("", callback);
+        },
         del: function(callback) { console.log("dropbox del"); }, // TODO
         write: function(contents, callback) {
-            console.log("dropbox write");
+            var self = this;
             $.ajax({
                 url: '/dropbox_save',
                 type: 'post',
                 data: {
-                    filepath: this.path,
+                    filepath: self.path,
                     contents: contents
                 },
                 success: function(data, textStatus, jqxhr) { callback(null, data); }, 
@@ -32,7 +34,6 @@ define(function() {
             });
         }, //TODO
         ls: function(callback) {
-            console.log("dropbox ls");
             var results = [];
             $.ajax({
                 url: '/dropbox_ls',
@@ -55,11 +56,40 @@ define(function() {
                 error: function(jqxhr, textStatus, errorThrown) { console.error(textStatus); }
             });
         },
-        touch: function() {
-            console.error('dropbox touch not implemented');
+        touch: function(name, callback) {
+            var self = this;
+            var fullpath = null;
+            if (self.path === "/" || self.path === undefined) {
+                fullpath = "/" + name;
+            } else {
+                fullpath = self.path + "/" + name;
+            }
+            var file = new DropboxDirectory(fullpath);
+            file.open(function() {
+                callback(null, file);
+            });
         },
-        mkdir: function() {
-            console.error('dropbox mkdir not implemented');
+        mkdir: function(name, callback) {
+            var self = this;
+            var fullpath = null;
+            if (self.path === "/" || self.path === undefined) {
+                fullpath = "/" + name;
+            } else {
+                fullpath = self.path + "/" + name;
+            }
+            $.ajax({
+                url: '/dropbox_mkdir',
+                type: 'post',
+                data: { path: fullpath },
+                success: function(data, textStatus, jqxhr) {
+                    self.path = fullpath;
+                    callback(null);
+                },
+                error: function(jqxhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    callback(errorThrown);
+                }
+            });
         }
     });
 
