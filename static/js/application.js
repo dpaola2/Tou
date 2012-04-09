@@ -15,11 +15,11 @@ define(['fs/services'], function(services, local) {
 
     var hookup_controls = function () {
 
-        $('.controls .open').on('click', open);
-        $('.controls .save').on('click', save_file);
-        $('.controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
-        $('.controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
-        $('.controls .cancel').on('click', hide_dir_tree);
+        $('#controls .open').on('click', open);
+        $('#controls .save').on('click', save_file);
+        $('#controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
+        $('#controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
+        $('#controls .cancel').on('click', hide_dir_tree);
         var editor_div = $('#editor')[0];
         editor = ace.edit(editor_div);
         editor.setTheme('ace/theme/textmate');
@@ -89,21 +89,21 @@ define(['fs/services'], function(services, local) {
     var show_dir_tree = function() {
         $('.app').hide();
         $('body').append('<div class="tree" />');
-        $('.controls .edit').hide();
-        $('.controls .dir').show();
+        $('#controls .edit').hide();
+        $('#controls .dir').show();
     }
 
     var hide_dir_tree = function() {
         $('.app').show();
         $('.tree').remove();
-        $('.controls .edit').show();
-        $('.controls .dir').hide();
+        $('#controls .edit').show();
+        $('#controls .dir').hide();
     }
 
     var save_file = function() {
         if (!current_file) {
         }
-        current_file.write($('.editor textarea').val(), function(err) {
+        current_file.write($('#editor textarea').val(), function(err) {
             current_file.close(doNothing);
         });
     }
