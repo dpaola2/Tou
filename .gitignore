@@ -5,3 +5,4 @@
 .Python
 ./build
 .DS_Store
+*.sw[op]
