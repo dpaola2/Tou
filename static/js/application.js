@@ -3,6 +3,9 @@ define(['fs/services'], function(services, local) {
     var current_file;
     var current_dir;
 
+    // The ace editor
+    var editor;
+
     function doNothing() {}
 
     var stop_event = function(e) {
@@ -18,16 +21,16 @@ define(['fs/services'], function(services, local) {
         $('.controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
         $('.controls .cancel').on('click', hide_dir_tree);
         var editor_div = $('#editor')[0];
-        window.editor = ace.edit(editor_div);
-        window.editor.setTheme('ace/theme/textmate');
-        window.editor.setHighlightActiveLine(false);
-        window.editor.renderer.setShowGutter(false);
-        window.editor.getSession().setUseWrapMode(true);
+        editor = ace.edit(editor_div);
+        editor.setTheme('ace/theme/textmate');
+        editor.setHighlightActiveLine(false);
+        editor.renderer.setShowGutter(false);
+        editor.getSession().setUseWrapMode(true);
         require(['ace/mode/markdown'], function(mode) {
-            window.editor.getSession().setMode(new mode.Mode());
+            editor.getSession().setMode(new mode.Mode());
         });
-        window.editor.setShowPrintMargin(false);
-        window.editor.commands.removeCommand('gotoline'); // uses CTRL/CMD-L which is annoying
+        editor.setShowPrintMargin(false);
+        editor.commands.removeCommand('gotoline'); // uses CTRL/CMD-L which is annoying
 
         // DnD support. jquery doesn't handle this well, so using
         // the old-school addEventListener.
@@ -153,23 +156,23 @@ define(['fs/services'], function(services, local) {
     }
 
     var reset_editor = function(new_contents) {
-        window.editor.getSession().setValue(new_contents);
+        editor.getSession().setValue(new_contents);
         focus_editor();
         convert();
     }
 
     var focus_editor = function() {
-        window.editor.focus();
+        editor.focus();
     }
 
     var convert = function() {
-        raw_input = window.editor.getSession().getValue();
+        raw_input = editor.getSession().getValue();
         content = markdown.toHTML(raw_input);
         $('.preview').html(content);
     }
 
     var start_converting = function() {
-        window.editor.getSession().on('change', convert);
+        editor.getSession().on('change', convert);
     }
 
     var load_file = function(url) {
