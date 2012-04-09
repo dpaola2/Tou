@@ -59,6 +59,7 @@ define(['fs/services'], function(services, local) {
             _.each(entries, function(entry) {
                 var $dirEntry = $('<li class="entry" />')
                     .text(entry.name)
+                    .attr('title', entry.name)
                     .data('meta', entry)
                     .on('click', descend);
                 $dir.append($dirEntry);

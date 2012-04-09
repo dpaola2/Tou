@@ -119,6 +119,7 @@ html, body, .app {
   list-style: none;
   overflow-x: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tree .dir input {
