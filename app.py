@@ -15,7 +15,7 @@ app.debug           = False
 if os.environ.get('DEBUG', False):
     app.debug = True
 app.secret_key      = 'briansucks'
-host                = "tou.herokuapp.com"
+host                = "tou.whiskeydrivendevelopment.com"
 if app.debug:
     host = "localhost:5000"
 
@@ -48,6 +48,19 @@ def load_file():
         return r.text
     except Exception, e:
         return e.message
+
+@app.route('/readme')
+def readme():
+    return open("README.md").read()
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+@app.route('/debug_session')
+def debug_session():
+    return str(session.items())
 
 @app.route('/dropbox/mkdir', methods=['POST'])
 def dropbox_mkdir():
@@ -116,7 +129,7 @@ def dropbox_ls():
         return e.message
 
 @app.route('/dropbox/read')
-def load_dropbox_file():
+def dropbox_read():
     dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
     if dropbox_access_token is None:
         return "please log into dropbox first"
@@ -131,10 +144,6 @@ def load_dropbox_file():
         return str(f.read())
     except Exception, e:
         return e.message
-
-@app.route('/readme')
-def readme():
-    return open("README.md").read()
 
 @app.route('/dropbox/link')
 def link_dropbox():
@@ -160,13 +169,4 @@ def dropbox_callback():
     session[DROPBOX_ACCESS_KEY] = access_token
     return redirect('/')
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect('/')
-
-@app.route('/debug_session')
-def debug_session():
-    return str(session.items())
-    
 app.run(host='0.0.0.0', port=PORT)
