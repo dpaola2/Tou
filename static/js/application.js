@@ -14,7 +14,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
         rotate: 5,
         trail: 60,
         speed: 1.2,
-        hwaccel: true
+        hwaccel: false
     });
 
     // The ace editor
