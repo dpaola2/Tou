@@ -94,9 +94,15 @@ html, body, .app {
   font-weight: bold;
 }
 
-.tree {
+.tree-scroller {
+  overflow-x: auto;
   float: left;
   height: 100%;
+}
+
+.tree {
+  height: 100%;
+  white-space: nowrap;
 }
 
 .tree .dir {

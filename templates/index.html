@@ -6,6 +6,11 @@
   <script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.1/underscore-min.js"></script>
   <script defer type="text/javascript" src="/static/js/lib/require.js"></script>
   <script defer type="text/javascript" src="/static/js/bootstrap.js"></script>
+  <script type="text/javascript">
+    sessions = {
+      dropbox: '{{ session['dropbox_access_token'] }}'
+    }
+  </script>
 </head>
 <body>
   <div class="drop-screen">Drop file to edit.</div>
@@ -13,15 +18,6 @@
     <div class="edit">
       <div class="icon save" title="Save"></div>
       <div class="icon open" title="Open"></div>
-      {% if session['dropbox_access_token'] %}
-      <a href="/logout">
-        <div class="icon logout" title="Logout"></div>
-      </a>
-      {% else %}
-      <a href="/dropbox/link">
-        <div class="icon dropbox" title="Link to Dropbox"></div>
-      </a>
-      {% endif %}
     <div class="icon shortlink" title="Shortlink"></div>
     </div>
     <div class="dir">

@@ -81,8 +81,15 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     }
 
     var render_dir = function(dir) {
+        var $tree = $('.tree');
         spinner.spin();
-        $('.tree').append(spinner.el);
+        $tree.width(($tree.find('.dir').length + 1) * 301);
+        $('.tree-scroller').animate({
+            scrollLeft: $tree.width()
+        }, {
+            duration: 300
+        });
+        $tree.append(spinner.el);
         dir.ls(function(err, entries) {
             if (err) {
                 //TODO: tell the user there was a problem
@@ -99,7 +106,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
                 $dir.append($dirEntry);
             });
             spinner.stop();
-            $('.tree').append($dir);
+            $tree.append($dir);
             $current_dir = $dir;
         });
     }
@@ -108,8 +115,8 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
         var entry = $.data(e.target, 'meta');
         var $file = $(e.target);
         var $parent = $file.parent('.dir')
-        $parent.find('.selected').removeClass('selected');
         $('.selected.current').removeClass('current');
+        $parent.find('.selected').removeClass('selected');
         $file.addClass('selected current');
         var remove;
         _.each($('.tree .dir'), function(dirEl) {
@@ -131,7 +138,8 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
 
     var show_dir_tree = function() {
         $('.app').hide();
-        $('body').append('<div class="tree" />');
+        $('body').append('<div class="tree-scroller"><div class="tree" /><div>');
+        $('.tree-scroller').css('max-width', $(window).width() - $('#controls').width());
         $('#controls .edit').hide();
         $('#controls .dir').show();
         hookup_tree_nav();
