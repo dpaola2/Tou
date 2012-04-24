@@ -1,3 +1,10 @@
-flask
-requests
-dropbox
+Flask==0.8
+Jinja2==2.6
+Werkzeug==0.8.3
+certifi==0.0.8
+chardet==1.0.1
+dropbox==1.4
+oauth==1.0.1
+requests==0.11.1
+simplejson==2.5.0
+wsgiref==0.1.2
