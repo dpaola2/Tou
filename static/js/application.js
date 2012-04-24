@@ -61,10 +61,12 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     }
 
     var open_file = function(file) {
+        hide_dir_tree();
+        show_blocking_notification('Opening&hellip;');
         file.read(function(err, contents) {
             current_file = file;
             reset_editor(contents);
-            hide_dir_tree();
+            hide_blocking_notification();
             file.close(doNothing);
         });
     }
@@ -269,13 +271,22 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     }
 
     var show_drop_screen = function(e) {
-        $('.drop-screen').show();
+        show_blocking_notification('Drop file to edit.');
         stop_event(e);
     }
 
     var hide_drop_screen = function(e) {
-        $('.drop-screen').hide();
+        hide_blocking_notification();
         stop_event(e);
+    }
+
+    var show_blocking_notification = function(message) {
+        $('.notif-screen').html(message);
+        $('.notif-screen').show();
+    }
+
+    var hide_blocking_notification = function() {
+        $('.notif-screen').hide();
     }
 
     var reset_editor = function(new_contents) {

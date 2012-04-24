@@ -80,7 +80,7 @@ html, body, .app {
   overflow-y: scroll;
 }
 
-.drop-screen {
+.notif-screen {
   display: none;
   position: absolute;
   width: 100%;
