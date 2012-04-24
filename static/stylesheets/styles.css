@@ -35,10 +35,6 @@ html, body, .app {
   background-image: url('/static/images/open.png');
 }
 
-#controls .save.icon {
-  background-image: url('/static/images/save.png');
-}
-
 #controls .dropbox.icon {
   background-image: url('/static/images/dropbox.png');
 }
@@ -61,6 +57,10 @@ html, body, .app {
 
 #controls .shortlink.icon {
   background-image: url('/static/images/link.png');
+}
+
+#controls .spinner {
+  left: 25px; /* should be half the width */
 }
 
 #controls .dir {

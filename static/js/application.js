@@ -30,7 +30,6 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     var hookup_controls = function () {
 
         $('#controls .open').on('click', open);
-        $('#controls .save').on('click', save_file);
         $('#controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
         $('#controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
         $('#controls .cancel').on('click', hide_dir_tree);
@@ -222,13 +221,15 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
     }
 
     var save_file = function() {
-        if (!current_file) {
+        if (!current_file || !current_file.write) {
+            return;
         }
         var contents = editor.getSession().getValue();
-        show_blocking_notification('Saving&hellip;');
+        spinner.spin();
+        $('#controls').append(spinner.el);
         current_file.write(contents, function(err) {
             current_file.close(doNothing);
-            hide_blocking_notification();
+            spinner.stop();
         });
     }
 
@@ -309,6 +310,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
 
     var start_converting = function() {
         editor.getSession().on('change', convert);
+        editor.getSession().on('change', _.debounce(save_file, 500));
     }
 
     var load_file = function(url) {
