@@ -310,7 +310,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
 
     var start_converting = function() {
         editor.getSession().on('change', convert);
-        editor.getSession().on('change', _.debounce(save_file, 500));
+        editor.getSession().on('change', _.debounce(save_file, 1000));
     }
 
     var load_file = function(url) {
