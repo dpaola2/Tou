@@ -225,8 +225,10 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
         if (!current_file) {
         }
         var contents = editor.getSession().getValue();
+        show_blocking_notification('Saving&hellip;');
         current_file.write(contents, function(err) {
             current_file.close(doNothing);
+            hide_blocking_notification();
         });
     }
 
