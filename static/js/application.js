@@ -108,8 +108,8 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
         var entry = $.data(e.target, 'meta');
         var $file = $(e.target);
         var $parent = $file.parent('.dir')
-        $parent.find('.selected').removeClass('selected');
         $('.selected.current').removeClass('current');
+        $parent.find('.selected').removeClass('selected');
         $file.addClass('selected current');
         var remove;
         _.each($('.tree .dir'), function(dirEl) {
