@@ -34,6 +34,7 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
         $('#controls .mkdir').on('click', _.bind(new_file_prompt, null, 'dir'));
         $('#controls .touch').on('click', _.bind(new_file_prompt, null, 'file'));
         $('#controls .cancel').on('click', hide_dir_tree);
+        $('#controls .shortlink').on('click', shortlink);
         var editor_div = $('#editor')[0];
         editor = ace.edit(editor_div);
         editor.setTheme('ace/theme/textmate');
@@ -65,6 +66,12 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
             reset_editor(contents);
             hide_dir_tree();
             file.close(doNothing);
+        });
+    }
+
+    var shortlink = function() {
+        current_file.shortlink(function(err, contents) {
+            alert(contents);
         });
     }
 
