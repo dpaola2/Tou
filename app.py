@@ -145,6 +145,22 @@ def dropbox_read():
     except Exception, e:
         return e.message
 
+@app.route('/dropbox/share')
+def dropbox_share():
+    dropbox_access_token = session.get(DROPBOX_ACCESS_KEY, None)
+    if dropbox_access_token is None:
+        return "please log into dropbox first"
+
+    filepath = request.args.get('filepath', None)
+    if filepath is None:
+        return "You didn't pass a filepath"
+
+    dropbox_client = get_client(dropbox_access_token)
+    try:
+        return str(dropbox_client.share(filepath).get('url'))
+    except Exception, e:
+        return e.message
+
 @app.route('/dropbox/link')
 def link_dropbox():
     if session.get(DROPBOX_ACCESS_KEY, False):

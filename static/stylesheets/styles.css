@@ -59,6 +59,10 @@ html, body, .app {
   background-image: url('/static/images/back.png');
 }
 
+#controls .shortlink.icon {
+  background-image: url('/static/images/link.png');
+}
+
 #controls .dir {
   display: none;
 }

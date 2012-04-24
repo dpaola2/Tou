@@ -3,6 +3,17 @@ define(function() {
         this.path = path;
     }
     _.extend(DropboxDirectory.prototype, {
+        shortlink: function(callback) {
+            $.ajax({
+                url: '/dropbox/share',
+                type: 'get',
+                data: {
+                    filepath: this.path
+                },
+                success: function(data, textStatus, jqxhr) { callback(null, data); },
+                error: function(jqxhr, textStatus, errorThrown) { callback(textStatus); }
+            });
+        },
         read: function(callback) {
             $.ajax({
                 url: '/dropbox/read',

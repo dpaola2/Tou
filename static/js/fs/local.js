@@ -21,6 +21,9 @@ define(function() {
                 callback(null, self);
             }, errorWrapper(callback));
         },
+        shortlink: function(callback) {
+            callback("nope");
+        },
         read: function(callback) {
             var self = this;
             self.open(function(err) {
