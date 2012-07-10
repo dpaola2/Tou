@@ -99,12 +99,14 @@ define(['fs/services', 'static/js/lib/spin.js'], function(services, local) {
             }
             var $dir = $('<ul class="dir" />');
             _.each(entries, function(entry) {
-                var $dirEntry = $('<li class="entry" />')
-                    .text(entry.name)
-                    .attr('title', entry.name)
-                    .data('meta', entry)
-                    .on('click', descend);
-                $dir.append($dirEntry);
+                if (/^.+\.md$/i.test(entry.name)) {
+                    var $dirEntry = $('<li class="entry" />')
+                        .text(entry.name)
+                        .attr('title', entry.name)
+                        .data('meta', entry)
+                        .on('click', descend);
+                    $dir.append($dirEntry);
+                }
             });
             spinner.stop();
             $tree.append($dir);
